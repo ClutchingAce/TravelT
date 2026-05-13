@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -53,7 +53,7 @@
         }
 
         .card-content { position: relative; z-index: 2; }
-        .card h2 { font-size: 32px; margin: 0; font-weight: 800; }
+        .card h2 { font-size: 28px; margin: 0; font-weight: 800; line-height: 1.2; }
         .card p { color: #e5e7eb; margin: 10px 0 20px; font-size: 14px; }
 
         .btn-view {
@@ -62,7 +62,6 @@
             cursor: pointer; width: 100%;
         }
 
-        /* Bottom Sheet */
         #sheet {
             position: fixed; bottom: -100%; left: 0;
             width: 100%; height: 85%;
@@ -83,12 +82,11 @@
 
         .media-container {
             width: 100%; border-radius: 20px; overflow: hidden;
-            margin-bottom: 20px; background: #000;
+            margin-bottom: 20px; background: #eee;
         }
 
-        video, img { width: 100%; display: block; border-radius: 20px; }
+        img { width: 100%; display: block; border-radius: 20px; }
 
-        /* AGENCY ITINERARY STYLES */
         .agency-itinerary {
             position: relative; padding-left: 20px; margin: 30px 0;
         }
@@ -134,18 +132,13 @@
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .itinerary-step:nth-child(1) { animation-delay: 0.1s; }
-        .itinerary-step:nth-child(2) { animation-delay: 0.3s; }
-        .itinerary-step:nth-child(3) { animation-delay: 0.5s; }
-        .itinerary-step:nth-child(4) { animation-delay: 0.7s; }
     </style>
 </head>
 <body>
 
     <header>
-        <span class="dynamic-title">Travel</span>
-        <h1 style="margin: 5px 0; font-weight: 800;">DEMO MODE</h1>
+        <span class="dynamic-title">Аялал</span>
+        <h1 style="margin: 5px 0; font-weight: 800;">Аялалын Чиглэл</h1>
     </header>
 
     <div class="swiper mySwiper">
@@ -155,52 +148,17 @@
     <div class="overlay" id="overlay" onclick="closeSheet()"></div>
     
     <div id="sheet">
-        <div style="width: 45px; height: 5px; background: #e5e7eb; border-radius: 10px; margin: -10px auto 25px;"></div>
+        <div style="width: 45px; height: 5px; background: #e5e7eb; border-radius: 10px; margin: -15px auto 25px;"></div>
         
         <div id="media-content"></div>
 
-        <h2 id="sheet-title" style="font-size: 32px; margin: 0; font-weight: 800;">Хот</h2>
+        <h2 id="sheet-title" style="font-size: 28px; margin: 0; font-weight: 800;">Хот</h2>
         <p id="sheet-desc" style="color: #6b7280; margin: 5px 0 20px;">Тайлбар</p>
         
-        <div class="agency-itinerary">
-            <div class="itinerary-step">
-                <div class="step-icon"><i data-lucide="plane-landing"></i></div>
-                <div class="step-details">
-                    <span class="step-time">Phase 1</span>
-                    <h4>Газардан бууна</h4>
-                    <p>Улаанбаатарын олон улсын нисэх онгоцны буудал</p>
-                </div>
-            </div>
+        <!-- This container is now dynamic -->
+        <div class="agency-itinerary" id="itinerary-container"></div>
 
-            <div class="itinerary-step">
-                <div class="step-icon active"><i data-lucide="footprints"></i></div>
-                <div class="step-details">
-                    <span class="step-time">Phase 2</span>
-                    <h4>Walking Experience</h4>
-                    <p>Exploring hidden city gems by foot.</p>
-                </div>
-            </div>
-
-            <div class="itinerary-step">
-                <div class="step-icon active"><i data-lucide="footprints"></i></div>
-                <div class="step-details">
-                    <span class="step-time">Phase 3</span>
-                    <h4>WХотоор алхаж байна</h4>
-                    <p>Хотын нууцлаг эрдэнэсийг явган аялах.</p>
-                </div>
-            </div>
-
-            <div class="itinerary-step">
-                <div class="step-icon"><i data-lucide="map-pin"></i></div>
-                <div class="step-details">
-                    <span class="step-time">Phase 4</span>
-                    <h4>Зочид буудал</h4>
-                    <p>Тансаг зэрэглэлийн төв байранд бүртгүүлж байна.</p>
-                </div>
-            </div>
-        </div>
-
-        <button onclick="closeSheet()" style="width: 100%; padding: 18px; border-radius: 15px; border: none; background: #000; color: white; font-weight: 700; font-size: 16px;">Return to Agency</button>
+        <button onclick="closeSheet()" style="width: 100%; padding: 18px; border-radius: 15px; border: none; background: #000; color: white; font-weight: 700; font-size: 16px;">Буцах</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.372.0/dist/umd/lucide.min.js"></script>
@@ -208,18 +166,47 @@
 
     <script>
         const destinations = [
-            { city: "Ulaanbaatar", desc: "Highlands & History", bg: "UB_downtown.jpg" , video: "UB_Video.mp4" },
-            { city: "San Francisco", desc: "Bridges & Tech", bg: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=800", video: "" },
-            { city: "Los Angeles", desc: "Cinema & Sunsets", bg: "https://images.unsplash.com/photo-1542736667-069246bdbc6d?auto=format&fit=crop&w=800", video: "" },
-            { city: "Tokyo", desc: "Neon & Tradition", bg: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800", video: "" },
-            { city: "Las Vegas", desc: "Entertainment Central", bg: "https://images.unsplash.com/photo-1581351123004-757df051db8e?auto=format&fit=crop&w=800", video: "" },
-            { city: "Chicago", desc: "Windy City", bg: "https://images.unsplash.com/photo-1494522855154-9297ac14b55f?auto=format&fit=crop&w=800", video: "" },
-            { city: "Seattle", desc: "Emerald City", bg: "https://images.unsplash.com/photo-1502175353174-a7a70e73b362?auto=format&fit=crop&w=800", video: "" }
+            { 
+                city: "Улаанбаатар-Замын-Үүд", 
+                desc: "Малчдад зориулсан аялал", 
+                bg: "UB_downtown.jpg",
+                itinerary: [
+                    { icon: "train-front", time: "15:30", title: "УБ-Хотын төмөр зам", text: "Хүрэлцэн ирэх, Зураг даруулах", active:true },
+                    { icon: "train-track", time: "16:40", title: "УБ-Хотын төмөр зам", text: "Богоон хөдлөх", active:true },
+                    { icon: "bed", time: "Шөнө", title: "Ая тухтай аялал", text: "2-р зэрэглэлийн унтлагын вагоноор тухтай зорчино.", active: true },
+                    { icon: "pin", time: "Өдөр 2", title: "БНХАУ-ын Өвөрмонгол", text: "Туршлага солилцох", active: true },
+                    { icon: "hotel", time: "Өдөр 2", title: "БНХАУ-ын Өвөрмонгол", text: "Han Ting сүлжээ буудал, өглөөний цай оройн хоол орсон", active: true },
+                    { icon: "Hospital", time: "Өдөр 3", title: "Шилийн гол аймгийн Олон Улсын Монгол Эмнэлэг", text: "Энэхүү эмнэлэг дээрээ манай аялагчид шинжилгээндээ хамрагдах юм. Мөн дараагаар нь Шилийн гол аймгийн төвийн цагаан идээний үйлдвэртэй танилцан, худалдан авалт хийх бүрэн боломжтой. Үдээс хойш нь шинжилгээний хариугаа аван эмчээсээ зөвлөгөө үйлчилгээгээ авна.", active:true },
+                    { icon: "hotel", time: "Өдөр 4", title: "Шилийн гол аймаг", text: "Чөлөөт өдөр, Буудлаасаа ойрхон зайд орших Тахилгат- Эрдэнэ овоо Бээсийн сүм, зах, дэлгүүрээр шофинг хийнэ. 13:00 цагт өрөөгөө хүлээлгэн өгөөд Эрээн хотын зүг буцна.", active:true },
+                    { icon: "pin", time: "Өдөр 5", title: "Эрээн хот-Замын-Үүд", text: "14:00 цагаас хөтөчийн заасан газарт цуглан Хятад улсын хил болон Монгол улсын хилээр гаран 18:00 цагт Замын үүд – Улаанбаатар чиглэлийн галт тэргээр хөдөлж (2-р зэрэглэл буюу “унтлагын вагон” – зорчигчийн нээлттэй таславчуудтай цагаан хэрэглэл, зөөлөн эдлэлтэй) аялна.", active:true },
+                    { icon: "train-track", time: "18:00", title: "УБ-Хотын чиглэлийн галт", text: "Богоон хөдлөх", active:true },
+                    { icon: "train-front", time: "Өдөр 6", title: "Улаанбаатар", text: "Өглөөний 09:20 цагт Улаанбаатар төмөр замын буудалд ирсэнээр дурсамж дүүрэн, үр бүтээлтэй аялал өндөрлөнө.", active: true }
+                ]
+            },
+            { 
+                city: "Бээжин", 
+                desc: "Юниверсал парк ба Дэлхийн парк", 
+                bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
+                itinerary: [
+                    { icon: "bus", time: "Phase 1", title: "Тээвэр", text: "Автобусаар парк руу явна" },
+                    { icon: "camera", time: "Phase 2", title: "Зураг авалт", text: "Юниверсал парк дээрх чөлөөт цаг", active: true },
+                    { icon: "utensils", time: "Phase 3", title: "Оройн хоол", text: "Бээжин нугас зооглох" }
+                ]
+            },
+            { 
+                city: "Дубай", 
+                desc: "Арабын нэгдсэн Эмират улс", 
+                bg: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800",
+                itinerary: [
+                    { icon: "sun", time: "Day 1", title: "Сафари аялал", text: "Элсэн цөлөөр жипээр аялах", active: true },
+                    { icon: "building-2", time: "Day 2", title: "Бурж Халифа", text: "Дэлхийн хамгийн өндөр цамхаг" }
+                ]
+            }
+            // Repeat this pattern for all other locations...
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
             const wrapper = document.getElementById('swiper-wrapper');
-
             destinations.forEach(dest => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
@@ -228,7 +215,7 @@
                         <div class="card-content">
                             <h2>${dest.city}</h2>
                             <p>${dest.desc}</p>
-                            <button class="btn-view" onclick="openSheet('${dest.city}')">Маршрутыг судлах</button>
+                            <button class="btn-view" onclick="openSheet('${dest.city}')">Маршрут харах</button>
                         </div>
                     </div>
                 `;
@@ -241,39 +228,46 @@
                 slidesPerView: "auto",
                 coverflowEffect: { rotate: 5, stretch: 0, depth: 100, modifier: 2, slideShadows: false },
             });
-            
             lucide.createIcons();
         });
 
         function openSheet(cityName) {
             const dest = destinations.find(d => d.city === cityName);
             const mediaBox = document.getElementById('media-content');
+            const itineraryContainer = document.getElementById('itinerary-container');
             
             document.getElementById('sheet-title').innerText = dest.city;
             document.getElementById('sheet-desc').innerText = dest.desc;
-
-            if (dest.video) {
-                mediaBox.innerHTML = `
-                <div class="media-container">
-                    <video autoplay muted loop playsinline poster="${dest.bg}">
-                        <source src="${dest.video}" type="video/mp4">
-                    </video>
-                </div>`;
-            } else {
-                mediaBox.innerHTML = `<div class="media-container"><img src="${dest.bg}"></div>`;
-            }
+            mediaBox.innerHTML = `<div class="media-container"><img src="${dest.bg}"></div>`;
+            
+            // Build the dynamic itinerary
+            itineraryContainer.innerHTML = ''; // Clear old steps
+            dest.itinerary.forEach((step, index) => {
+                const stepElement = document.createElement('div');
+                stepElement.className = 'itinerary-step';
+                stepElement.style.animationDelay = `${(index + 1) * 0.15}s`;
+                
+                stepElement.innerHTML = `
+                    <div class="step-icon ${step.active ? 'active' : ''}">
+                        <i data-lucide="${step.icon}"></i>
+                    </div>
+                    <div class="step-details">
+                        <span class="step-time">${step.time}</span>
+                        <h4>${step.title}</h4>
+                        <p>${step.text}</p>
+                    </div>
+                `;
+                itineraryContainer.appendChild(stepElement);
+            });
 
             document.getElementById('sheet').classList.add('open');
             document.getElementById('overlay').style.display = 'block';
-            
-            // Re-trigger icons so they show up in the sheet
             lucide.createIcons();
         }
 
         function closeSheet() {
             document.getElementById('sheet').classList.remove('open');
             document.getElementById('overlay').style.display = 'none';
-            document.getElementById('media-content').innerHTML = '';
         }
     </script>
 </body>
