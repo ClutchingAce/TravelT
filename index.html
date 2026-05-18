@@ -35,7 +35,6 @@
             color: var(--primary); text-transform: uppercase;
         }
 
-        /* Category Filter Styles */
         .filter-bar {
             display: flex; gap: 8px; margin-top: 15px; overflow-x: auto;
             padding-bottom: 5px; -webkit-overflow-scrolling: touch;
@@ -53,15 +52,17 @@
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
         }
 
-        .swiper { width: 100%; height: 100vh; padding-top: 135px; }
+        /* Tweaked padding top and bottom to lift the cards up safely */
+        .swiper { width: 100%; height: 100vh; padding-top: 130px; padding-bottom: 40px; box-sizing: border-box; }
         .swiper-slide { display: flex; justify-content: center; align-items: center; width: 320px; }
 
+        /* Reduced card height from 480px to 440px to leave safe clearance at the bottom */
         .card {
-            width: 100%; height: 480px;
+            width: 100%; height: 440px;
             background-size: cover; background-position: center;
             border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
             position: relative; display: flex; flex-direction: column;
-            justify-content: flex-end; padding: 30px; box-sizing: border-box;
+            justify-content: flex-end; padding: 25px; box-sizing: border-box;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); overflow: hidden;
             will-change: transform;
         }
@@ -72,14 +73,14 @@
             z-index: 1;
         }
 
-        .card-content { position: relative; z-index: 2; }
-        .card h2 { font-size: 26px; margin: 0; font-weight: 800; line-height: 1.2; }
-        .card p { color: #e5e7eb; margin: 8px 0 18px; font-size: 13px; }
+        .card-content { position: relative; z-index: 2; width: 100%; }
+        .card h2 { font-size: 24px; margin: 0; font-weight: 800; line-height: 1.2; }
+        .card p { color: #e5e7eb; margin: 8px 0 16px; font-size: 13px; }
 
         .btn-view {
             background: var(--primary); color: black; border: none;
             padding: 15px; border-radius: 15px; font-weight: 700;
-            cursor: pointer; width: 100%;
+            cursor: pointer; width: 100%; -webkit-tap-highlight-color: transparent;
         }
 
         #sheet {
@@ -143,7 +144,6 @@
         
         <div class="filter-bar">
             <div class="filter-tab active" onclick="switchCategory('all', this)">Бүх аялал</div>
-            <div class="filter-tab" onclick="switchCategory('MONGOLIA', this)">Монгол</div>
             <div class="filter-tab" onclick="switchCategory('china', this)">Хятад</div>
             <div class="filter-tab" onclick="switchCategory('japan', this)">Япон</div>
             <div class="filter-tab" onclick="switchCategory('other', this)">Бусад</div>
@@ -177,10 +177,10 @@
                 city: "БНХАУ-ын ӨМӨЗО-ны нийслэл Хөх хот, Ордос, Жининь хотууд", 
                 desc: "Шууд нислэгтэй аяллын хөтөлбөр", 
                 bg: "HuhHot.png",
-                itinerary: [{ icon: "log-in", time: "2025.12.01 12:00", title: "Цугларах", text: "ОУ-ын Чингис хаан нисэх буудал дээр бүрэн цугласан байна." },{ icon: "plane", time: "14:00", title: "Нислэг", text: "AERO MONGOLIA компани онгоцоор Хөх хотруу ниснэ." },{ icon: "plane-landing", time: "15:50", title: "Хүрэлцэн ирэх", text: "Хөх хотод бууна." },{ icon: "hotel", time: "17:00", title: "Байрлах & Оройн хоол", text: "Буудалдаа байрлаж Оройн хоол зооглоно.", active: true },{ icon: "bus", time: "2025.12.02 Өглөө", title: "Хөдлөх", text: "Өглөөний цайны дараа Жининт хотруу хөдөлнө." },{ icon: "images", time: "Замдаа", title: "Үзвэр", text: "Мини Аватаар орж амьтны хүрээлэн шилэн гүүр орж үзнэ.", active: true },{ icon: "car", time: "Замдаа", title: "Тээвэр", text: "Хөх хотоос 280 км-ийн зайд орших тул ойролцоогоор ... цаг орчим явж Жининь хотод хүрэлцэн ирнэ." },{ icon: "wave", time: "Орой", title: "WATER WORLD Амралт", text: "Жининь буюу Улаанцав хотод хүрэлцэн ирж WATER WORLD амралтын цогцолбор газарт ирж хононо. Усан бассейнд тоглож зугаацах, 33 төрлийн халуун рашаанд орж биеийн алжаал ядаргаагаа тайлж амрах", active: true },{ icon: "utensils", time: "Орой", title: "Оройн хоол", text: "Энэхүү амралтын газар ОРОЙН ХООЛ хоолонд Буфет хоолноос хүссэнээрээ сонгон идэх болно. Энэ өдөр Жининий энэхүү амралтын цогцолборт цагийг зугаатай өнгөрүүлж хононо", active: true },{ icon: "coffee", time: "2025.12.03 Өглөө", title: "Өглөөний цай ба Амралт", text: "WATER WORLD 5 одтой амралтын цогцолбортоо өглөөний цай ууна. Хооронд халуун рашаан, саун, усан сан, амралтын цогцолбортоо амарна." },{ icon: "milestone", time: "Өдөр", title: "Хүслийн суварга", text: "Жининь хотын Хүслийн суварга дээр очиж хүслээ шивнэн Улаанцав хот буюу Жининийг дээрээс нь бүхэлд нь харах боломжтой. Хүслийн суваргын доор аялагчид бүгд дурсгалын зургаа авхуулсны дараа аяллын автобусандаа суун цааш хөдөлнө.", active: true },{ icon: "bus", time: "Өдөр", title: "Ордос хот руу хөдлөх", text: "Ордос хот руу хөдлөх. 480 кмт ойролцоогоор 6 цаг явж хүрнэ." },{ icon: "landmark", time: "Оройхон", title: "Чингис хааны Бунхан цогцолбор", text: "Их эзэн Чингис хааны 'Бунх' цогцолборт зочлохдоо онгон шүтээн бүхий 3 залгаа гэр хэлбэртэй ордонд бараалхаж идээ будаагаа өргөн, тахилгын овоог тойрч, эрчүүд хийморь лундаагаа сэргээн хар сүлдэнд мөргөнө.", active: true },{ icon: "map", time: "Орой", title: "Канбаши ба Шөнийн аялал", text: "Канбаши хоттой танилцах аялал хийнэ. ОРОЙН ХООЛ дараа зочид буудалдаа байрлан амарна. Ордос хотын шөнийн аялал хийнэ.", active: true },{ icon: "sun", time: "2025.12.04 Өглөө", title: "Чөлөөт цаг", text: "Өглөөний цайны дараа чөлөөт цаг амарч зугаалж болно." },{ icon: "bus", time: "Өдөр", title: "Хөх хот руу буцах", text: "Хөх хот руу 320 кмт ойролцоогоор 4 цаг явж Хөх хотод байрлах зочид буудалдаа ачаа тээшээ тавин бүртгэл хийлгэж байрлаж амарна." },{ icon: "utensils", time: "Орой", title: "Оройн хоол & Шопинг", text: "Амарсаны дараа Хөх хотод Оройн хоол идээд чөлөөт цаг шопинг.", active: true },{ icon: "shopping-bag", time: "2025.12.05 Өдөр", title: "Чөлөөт өдөр", text: "Чөлөөт өдөр" },{ icon: "building", time: "20:00", title: "Нисэх буудал хүргэх", text: "Хөх хотын онгоцны буудал дээр хүргэж нислэгийн бүрдүүлэлт хийж" },{ icon: "plane-takeoff", time: "23:30", title: "Нислэг", text: "Улаанбаатар хотруу хөөрнө." },{ icon: "home", time: "2025.12.06 01:00", title: "Буух", text: "Улаанбаатар хотод шилжих шөнө бууна." }]
+                itinerary: [{ icon: "log-in", time: "2025.12.01 12:00", title: "Цугларах", text: "ОУ-ын Чингис хаан нисэх буудал дээр бүрэн цугласан байна." },{ icon: "plane", time: "14:00", title: "Нислэг", text: "AERO MONGOLIA компани онгоцоор Хөх хотруу ниснэ." },{ icon: "plane-landing", time: "15:50", title: "Хүрэлцэн ирэх", text: "Хөх хотод бууна." },{ icon: "hotel", time: "17:00", title: "Байрлах & Оройн хоол", text: "Буудалдаа байрлаж Оройн хоол зооглоно.", active: true },{ icon: "bus", time: "2025.12.02 Өглөө", title: "Хөдлөх", text: "Өглөөний цайны дараа Жининт хотруу хөдөлнө." },{ icon: "images", time: "Замдаа", title: "Үзвэр", text: "Мини аватороор орж амьтны хүрээлэн шилэн гүүр орж үзнэ.", active: true },{ icon: "car", time: "Замдаа", title: "Тээвэр", text: "Хөх хотоос 280 км-ийн зайд орших тул ойролцоогоор ... цаг орчим явж Жининь хотод хүрэлцэн ирнэ." },{ icon: "wave", time: "Орой", title: "WATER WORLD Амралт", text: "Жининь буюу Улаанцав хотод хүрэлцэн ирж WATER WORLD амралтын цогцолбор газарт ирж хононо. Усан бассейнд тоглож зугаацах, 33 төрлийн халуун рашаанд орж биеийн алжаал ядаргаагаа тайлж амрах", active: true },{ icon: "utensils", time: "Орой", title: "Оройн хоол", text: "Энэхүү амралтын газар ОРОЙН ХООЛ хоолонд Буфет хоолноос хүссэнээрээ сонгон идэх болно. Энэ өдөр Жининий энэхүү амралтын цогцолборт цагийг зугаатай өнгөрүүлж хононо", active: true },{ icon: "coffee", time: "2025.12.03 Өглөө", title: "Өглөөний цай ба Амралт", text: "WATER WORLD 5 одтой амралтын цогцолбортоо өглөөний цай ууна. Хооронд халуун рашаан, саун, усан сан, амралтын цогцолбортоо амарна." },{ icon: "milestone", time: "Өдөр", title: "Хүслийн суварга", text: "Жининь хотын Хүслийн суварга дээр очиж хүслээ шивнэн Улаанцав хот буюу Жининийг дээрээс нь бүхэлд нь харах боломжтой. Хүслийн суваргын доор аялагчид бүгд дурсгалын зургаа авхуулсны дараа аяллын автобусандаа суун цааш хөдөлнө.", active: true },{ icon: "bus", time: "Өдөр", title: "Ордос хот руу хөдлөх", text: "Ордос хот руу хөдлөх. 480 кмт ойролцоогоор 6 цаг явж хүрнэ." },{ icon: "landmark", time: "Оройхон", title: "Чингис хааны Бунхан цогцолбор", text: "Их эзэн Чингис хааны 'Бунх' цогцолборт зочлохдоо онгон шүтээн бүхий 3 залгаа гэр хэлбэртэй ордонд бараалхаж идээ будаагаа өргөн, тахилгын овоог тойрч, эрчүүд хийморь лундаагаа сэргээн хар сүлдэнд мөргөнө.", active: true },{ icon: "map", time: "Орой", title: "Канбаши ба Шөнийн аялал", text: "Канбаши хоттой танилцах аялал хийнэ. ОРОЙН ХООЛ дараа зочид буудалдаа байрлан амарна. Ордос хотын шөнийн аялал хийнэ.", active: true },{ icon: "sun", time: "2025.12.04 Өглөө", title: "Чөлөөт цаг", text: "Өглөөний цайны дараа чөлөөт цаг амарч зугаалж болно." },{ icon: "bus", time: "Өдөр", title: "Хөх хот руу буцах", text: "Хөх хот руу 320 кмт ойролцоогоор 4 цаг явж Хөх хотод байрлах зочид буудалдаа ачаа тээшээ тавин бүртгэл хийлгэж байрлаж амарна." },{ icon: "utensils", time: "Орой", title: "Оройн хоол & Шопинг", text: "Амарсаны дараа Хөх хотод Оройн хоол идээд чөлөөт цаг шопинг.", active: true },{ icon: "shopping-bag", time: "2025.12.05 Өдөр", title: "Чөлөөт өдөр", text: "Чөлөөт өдөр" },{ icon: "building", time: "20:00", title: "Нисэх буудал хүргэх", text: "Хөх хотын онгоцны буудал дээр хүргэж нислэгийн бүрдүүлэлт хийж" },{ icon: "plane-takeoff", time: "23:30", title: "Нислэг", text: "Улаанбаатар хотруу хөөрнө." },{ icon: "home", time: "2025.12.06 01:00", title: "Буух", text: "Улаанбаатар хотод шилжих шөнө бууна." }]
             },
             { 
-                country: "MONGOLIA",
+                country: "china",
                 city: "Улаанбаатар-Замын-Үүд", 
                 desc: "Малчдад зориулсан аялал", 
                 bg: "UB_downtown.jpg",
@@ -268,7 +268,7 @@
                 city: "Япон улс (Тохоку-Сендай-Токио)", 
                 desc: "Албан айлчлал, туршлага судлах, аялал хамтарсан хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [{ icon: "plane", time: "Өдөр 1 07:45", title: "Улаанбаатар - Нарита - Сендай", text: "Нарита нисэх буудалд бууна. Наритагаас Сендай руу явна." },{ icon: "camera", time: "Өдөр 2 Өглөө", title: "Мияги аялал", text: "Asakusa Sensoji хуучны гудамж, сүм үзэж, үдээс хойш Sky Tour гарна.", active: true },{ icon: "ship", time: "Өдөр 3 Өглөө", title: "Мацүшима арал & Mitsui Outlet", text: "алдарт Мацүшима арал руу усан онгоцоор аялна.", active: true },{ icon: "map", time: "Өдөр 4 Өглөө", title: "Michinoku үндэсний парк - Токио", text: "Michinoku үндэсний цэцэрлэгт хүрээлэнгээр аялна." },{ icon: "ticket", time: "ӨДӨР 5 Өглөө", title: "Токио хотын аялал (TeamLab)", text: "TeamLab энтертайнтмент дижитал арт паркаар зочилно.", active: true },{ icon: "home", time: "Өдөр 6 15:30", title: "Токио - Улаанбаатар буцах", text: "15:30 цагт Токио хотоос хөөрч Улаанбаатар луу буцна." }]
+                itinerary: [{ icon: "plane", time: "Өдөр 1 07:45", title: "Улаанбаатар - Нарита - Сендай", text: "Нарита нисэх буудалд бууна. Наритагаас Сендай руу явна." },{ icon: "camera", time: "Өдөр 2 Өглөө", title: "Мияги аялал", text: "Asakusa Sensoji хуучны гудамж, сүм үзэж, Sky Tour гарна.", active: true },{ icon: "ship", time: "Өдөр 3 Өглөө", title: "Мацүшима арал & Mitsui Outlet", text: "алдарт Мацүшима арал руу усан онгоцоор аялна.", active: true },{ icon: "map", time: "Өдөр 4 Өглөө", title: "Michinoku үндэсний парк - Токио", text: "Michinoku үндэсний цэцэрлэгт khuureelengyeer аялна." },{ icon: "ticket", time: "ӨДӨР 5 Өглөө", title: "Токио хотын аялал (TeamLab)", text: "TeamLab энтертайнтмент дижитал арт паркаар зочилно.", active: true },{ icon: "home", time: "Өдөр 6 15:30", title: "Токио - Улаанбаатар буцах", text: "15:30 цагт Токио хотоос хөөрч Улаанбаатар луу буцна." }]
             },
             { 
                 country: "japan",
@@ -317,12 +317,10 @@
             });
             wrapper.appendChild(fragment);
 
-            // Destroy old Swiper instance if it exists to clean layout tracking
             if (mainSwiperInstance) {
                 mainSwiperInstance.destroy(true, true);
             }
 
-            // Init freshly built dynamic slide list
             mainSwiperInstance = new Swiper(".mySwiper", {
                 effect: "coverflow",
                 centeredSlides: true,
