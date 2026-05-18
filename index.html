@@ -24,9 +24,10 @@
         header {
             position: fixed;
             top: 0; left: 0; width: 100%;
-            padding: 40px 20px 20px;
+            padding: 30px 20px 15px;
             z-index: 10;
-            background: linear-gradient(to bottom, rgba(3,7,18,0.8), transparent);
+            background: linear-gradient(to bottom, rgba(3,7,18,0.95), rgba(3,7,18,0.7) 70%, transparent);
+            box-sizing: border-box;
         }
 
         .dynamic-title {
@@ -34,11 +35,29 @@
             color: var(--primary); text-transform: uppercase;
         }
 
-        .swiper { width: 100%; height: 100vh; padding-top: 80px; }
+        /* Category Filter Styles */
+        .filter-bar {
+            display: flex; gap: 8px; margin-top: 15px; overflow-x: auto;
+            padding-bottom: 5px; -webkit-overflow-scrolling: touch;
+        }
+        .filter-bar::-webkit-scrollbar { display: none; }
+        
+        .filter-tab {
+            background: rgba(255,255,255,0.06); color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px;
+            border-radius: 20px; font-size: 13px; font-weight: 600;
+            cursor: pointer; white-space: nowrap; transition: all 0.25s ease;
+        }
+        .filter-tab.active {
+            background: var(--primary); color: #000; border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+        }
+
+        .swiper { width: 100%; height: 100vh; padding-top: 135px; }
         .swiper-slide { display: flex; justify-content: center; align-items: center; width: 320px; }
 
         .card {
-            width: 100%; height: 500px;
+            width: 100%; height: 480px;
             background-size: cover; background-position: center;
             border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
             position: relative; display: flex; flex-direction: column;
@@ -49,13 +68,13 @@
 
         .card::before {
             content: ''; position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%);
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 65%);
             z-index: 1;
         }
 
         .card-content { position: relative; z-index: 2; }
-        .card h2 { font-size: 28px; margin: 0; font-weight: 800; line-height: 1.2; }
-        .card p { color: #e5e7eb; margin: 10px 0 20px; font-size: 14px; }
+        .card h2 { font-size: 26px; margin: 0; font-weight: 800; line-height: 1.2; }
+        .card p { color: #e5e7eb; margin: 8px 0 18px; font-size: 13px; }
 
         .btn-view {
             background: var(--primary); color: black; border: none;
@@ -74,7 +93,7 @@
             overflow-y: auto;
         }
 
-        #sheet.open { transform: translateY(100%); bottom: 0; transform: translateY(0); }
+        #sheet.open { bottom: 0; transform: translateY(0); }
 
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -89,23 +108,11 @@
 
         img { width: 100%; display: block; border-radius: 20px; }
 
-        .agency-itinerary {
-            position: relative; padding-left: 20px; margin: 30px 0;
-        }
+        .agency-itinerary { position: relative; padding-left: 20px; margin: 30px 0; }
+        .agency-itinerary::before { content: ''; position: absolute; left: 34px; top: 0; bottom: 0; width: 2px; background: #f3f4f6; z-index: 0; }
 
-        .agency-itinerary::before {
-            content: ''; position: absolute; left: 34px; top: 0; bottom: 0;
-            width: 2px; background: #f3f4f6; z-index: 0;
-        }
-
-        .itinerary-step {
-            display: flex; gap: 20px; margin-bottom: 25px;
-            position: relative; z-index: 1; opacity: 0;
-        }
-
-        #sheet.open .itinerary-step {
-            animation: fadeInUp 0.4s ease forwards;
-        }
+        .itinerary-step { display: flex; gap: 20px; margin-bottom: 25px; position: relative; z-index: 1; opacity: 0; }
+        #sheet.open .itinerary-step { animation: fadeInUp 0.4s ease forwards; }
 
         .step-icon {
             width: 32px; height: 32px; background: white;
@@ -124,23 +131,23 @@
         .step-details p { margin: 4px 0 0; font-size: 13px; color: #64748b; }
         .step-time { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
 
-        @keyframes pulseIcon {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes pulseIcon { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <header>
         <span class="dynamic-title">Аялал</span>
-        <h1 style="margin: 5px 0; font-weight: 800;">Аялалын Чиглэл</h1>
+        <h1 style="margin: 3px 0 0; font-weight: 800; font-size: 24px;">Аялалын Чиглэл</h1>
+        
+        <div class="filter-bar">
+            <div class="filter-tab active" onclick="switchCategory('all', this)">Бүх аялал</div>
+            <div class="filter-tab" onclick="switchCategory('MONGOLIA', this)">Монгол</div>
+            <div class="filter-tab" onclick="switchCategory('china', this)">Хятад</div>
+            <div class="filter-tab" onclick="switchCategory('japan', this)">Япон</div>
+            <div class="filter-tab" onclick="switchCategory('other', this)">Бусад</div>
+        </div>
     </header>
 
     <div class="swiper mySwiper">
@@ -151,14 +158,10 @@
     
     <div id="sheet">
         <div style="width: 45px; height: 5px; background: #e5e7eb; border-radius: 10px; margin: -15px auto 25px;"></div>
-        
         <div id="media-content"></div>
-
-        <h2 id="sheet-title" style="font-size: 28px; margin: 0; font-weight: 800;">Хот</h2>
-        <p id="sheet-desc" style="color: #6b7280; margin: 5px 0 20px;">Тайлбар</p>
-        
+        <h2 id="sheet-title" style="font-size: 24px; margin: 0; font-weight: 800; line-height: 1.2;">Хот</h2>
+        <p id="sheet-desc" style="color: #6b7280; margin: 5px 0 20px; font-size: 14px;">Тайлбар</p>
         <div class="agency-itinerary" id="itinerary-container"></div>
-
         <button onclick="closeSheet()" style="width: 100%; padding: 18px; border-radius: 15px; border: none; background: #000; color: white; font-weight: 700; font-size: 16px; cursor: pointer;">Буцах</button>
     </div>
 
@@ -166,286 +169,146 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
+        let mainSwiperInstance = null;
+
         const destinations = [
             { 
+                country: "china",
                 city: "БНХАУ-ын ӨМӨЗО-ны нийслэл Хөх хот, Ордос, Жининь хотууд", 
                 desc: "Шууд нислэгтэй аяллын хөтөлбөр", 
                 bg: "HuhHot.png",
-                itinerary: [
-                    { icon: "log-in", time: "2025.12.01 12:00", title: "Цугларах", text: "ОУ-ын Чингис хаан нисэх буудал дээр бүрэн цугласан байна." },
-                    { icon: "plane", time: "14:00", title: "Нислэг", text: "AERO MONGOLIA компани онгоцоор Хөх хотруу ниснэ." },
-                    { icon: "plane-landing", time: "15:50", title: "Хүрэлцэн ирэх", text: "Хөх хотод бууна." },
-                    { icon: "hotel", time: "17:00", title: "Байрлах & Оройн хоол", text: "Буудалдаа байрлаж Оройн хоол зооглоно.", active: true },
-                    { icon: "bus", time: "2025.12.02 Өглөө", title: "Хөдлөх", text: "Өглөөний цайны дараа Жининт хотруу хөдөлнө." },
-                    { icon: "images", time: "Замдаа", title: "Үзвэр", text: "Мини аватороор орж амьтны хүрээлэн шилэн гүүр орж үзнэ.", active: true },
-                    { icon: "car", time: "Замдаа", title: "Тээвэр", text: "Хөх хотоос 280 км-ийн зайд орших тул ойролцоогоор ... цаг орчим явж Жининь хотод хүрэлцэн ирнэ." },
-                    { icon: "wave", time: "Орой", title: "WATER WORLD Амралт", text: "Жининь буюу Улаанцав хотод хүрэлцэн ирж WATER WORLD амралтын цогцолбор газарт ирж хононо. Усан бассейнд тоглож зугаацах, 33 төрлийн халуун рашаанд орж биеийн алжаал ядаргаагаа тайлж амрах", active: true },
-                    { icon: "utensils", time: "Орой", title: "Оройн хоол", text: "Энэхүү амралтын газар ОРОЙН ХООЛ хоолонд Буфет хоолноос хүссэнээрээ сонгон идэх болно. Энэ өдөр Жининий энэхүү амралтын цогцолборт цагийг зугаатай өнгөрүүлж хононо", active: true },
-                    { icon: "coffee", time: "2025.12.03 Өглөө", title: "Өглөөний цай ба Амралт", text: "WATER WORLD 5 одтой амралтын цогцолбортоо өглөөний цай ууна. Хооронд халуун рашаан, саун, усан сан, амралтын цогцолбортоо амарна." },
-                    { icon: "milestone", time: "Өдөр", title: "Хүслийн суварга", text: "Жининь хотын Хүслийн суварга дээр очиж хүслээ шивнэн Улаанцав хот буюу Жининийг дээрээс нь бүхэлд нь харах боломжтой. Хүслийн суваргын доор аялагчид бүгд дурсгалын зургаа авхуулсны дараа аяллын автобусандаа суун цааш хөдөлнө.", active: true },
-                    { icon: "bus", time: "Өдөр", title: "Ордос хот руу хөдлөх", text: "Ордос хот руу хөдлөх. 480 кмт ойролцоогоор 6 цаг явж хүрнэ." },
-                    { icon: "landmark", time: "Оройхон", title: "Чингис хааны Бунхан цогцолбор", text: "Их эзэн Чингис хааны 'Бунх' цогцолборт зочлохдоо онгон шүтээн бүхий 3 залгаа гэр хэлбэртэй ордонд бараалхаж идээ будаагаа өргөн, тахилгын овоог тойрч, эрчүүд хийморь лундаагаа сэргээн хар сүлдэнд мөргөнө.", active: true },
-                    { icon: "map", time: "Орой", title: "Канбаши ба Шөнийн аялал", text: "Канбаши хоттой танилцах аялал хийнэ. ОРОЙН ХООЛ дараа зочид буудалдаа байрлан амарна. Ордос хотын шөнийн аялал хийнэ.", active: true },
-                    { icon: "sun", time: "2025.12.04 Өглөө", title: "Чөлөөт цаг", text: "Өглөөний цайны дараа чөлөөт цаг амарч зугаалж болно." },
-                    { icon: "bus", time: "Өдөр", title: "Хөх хот руу буцах", text: "Хөх хот руу 320 кмт ойролцоогоор 4 цаг явж Хөх хотод байрлах зочид буудалдаа ачаа тээшээ тавин бүртгэл хийлгэж байрлаж амарна." },
-                    { icon: "utensils", time: "Орой", title: "Оройн хоол & Шопинг", text: "Амарсаны дараа Хөх хотод Оройн хоол идээд чөлөөт цаг шопинг.", active: true },
-                    { icon: "shopping-bag", time: "2025.12.05 Өдөр", title: "Чөлөөт өдөр", text: "Чөлөөт өдөр" },
-                    { icon: "building", time: "20:00", title: "Нисэх буудал хүргэх", text: "Хөх хотын онгоцны буудал дээр хүргэж нислэгийн бүрдүүлэлт хийж" },
-                    { icon: "plane-takeoff", time: "23:30", title: "Нислэг", text: "Улаанбаатар хотруу хөөрнө." },
-                    { icon: "home", time: "2025.12.06 01:00", title: "Буух", text: "Улаанбаатар хотод шилжих шөнө бууна." }
-                ]
+                itinerary: [{ icon: "log-in", time: "2025.12.01 12:00", title: "Цугларах", text: "ОУ-ын Чингис хаан нисэх буудал дээр бүрэн цугласан байна." },{ icon: "plane", time: "14:00", title: "Нислэг", text: "AERO MONGOLIA компани онгоцоор Хөх хотруу ниснэ." },{ icon: "plane-landing", time: "15:50", title: "Хүрэлцэн ирэх", text: "Хөх хотод бууна." },{ icon: "hotel", time: "17:00", title: "Байрлах & Оройн хоол", text: "Буудалдаа байрлаж Оройн хоол зооглоно.", active: true },{ icon: "bus", time: "2025.12.02 Өглөө", title: "Хөдлөх", text: "Өглөөний цайны дараа Жининт хотруу хөдөлнө." },{ icon: "images", time: "Замдаа", title: "Үзвэр", text: "Мини Аватаар орж амьтны хүрээлэн шилэн гүүр орж үзнэ.", active: true },{ icon: "car", time: "Замдаа", title: "Тээвэр", text: "Хөх хотоос 280 км-ийн зайд орших тул ойролцоогоор ... цаг орчим явж Жининь хотод хүрэлцэн ирнэ." },{ icon: "wave", time: "Орой", title: "WATER WORLD Амралт", text: "Жининь буюу Улаанцав хотод хүрэлцэн ирж WATER WORLD амралтын цогцолбор газарт ирж хононо. Усан бассейнд тоглож зугаацах, 33 төрлийн халуун рашаанд орж биеийн алжаал ядаргаагаа тайлж амрах", active: true },{ icon: "utensils", time: "Орой", title: "Оройн хоол", text: "Энэхүү амралтын газар ОРОЙН ХООЛ хоолонд Буфет хоолноос хүссэнээрээ сонгон идэх болно. Энэ өдөр Жининий энэхүү амралтын цогцолборт цагийг зугаатай өнгөрүүлж хононо", active: true },{ icon: "coffee", time: "2025.12.03 Өглөө", title: "Өглөөний цай ба Амралт", text: "WATER WORLD 5 одтой амралтын цогцолбортоо өглөөний цай ууна. Хооронд халуун рашаан, саун, усан сан, амралтын цогцолбортоо амарна." },{ icon: "milestone", time: "Өдөр", title: "Хүслийн суварга", text: "Жининь хотын Хүслийн суварга дээр очиж хүслээ шивнэн Улаанцав хот буюу Жининийг дээрээс нь бүхэлд нь харах боломжтой. Хүслийн суваргын доор аялагчид бүгд дурсгалын зургаа авхуулсны дараа аяллын автобусандаа суун цааш хөдөлнө.", active: true },{ icon: "bus", time: "Өдөр", title: "Ордос хот руу хөдлөх", text: "Ордос хот руу хөдлөх. 480 кмт ойролцоогоор 6 цаг явж хүрнэ." },{ icon: "landmark", time: "Оройхон", title: "Чингис хааны Бунхан цогцолбор", text: "Их эзэн Чингис хааны 'Бунх' цогцолборт зочлохдоо онгон шүтээн бүхий 3 залгаа гэр хэлбэртэй ордонд бараалхаж идээ будаагаа өргөн, тахилгын овоог тойрч, эрчүүд хийморь лундаагаа сэргээн хар сүлдэнд мөргөнө.", active: true },{ icon: "map", time: "Орой", title: "Канбаши ба Шөнийн аялал", text: "Канбаши хоттой танилцах аялал хийнэ. ОРОЙН ХООЛ дараа зочид буудалдаа байрлан амарна. Ордос хотын шөнийн аялал хийнэ.", active: true },{ icon: "sun", time: "2025.12.04 Өглөө", title: "Чөлөөт цаг", text: "Өглөөний цайны дараа чөлөөт цаг амарч зугаалж болно." },{ icon: "bus", time: "Өдөр", title: "Хөх хот руу буцах", text: "Хөх хот руу 320 кмт ойролцоогоор 4 цаг явж Хөх хотод байрлах зочид буудалдаа ачаа тээшээ тавин бүртгэл хийлгэж байрлаж амарна." },{ icon: "utensils", time: "Орой", title: "Оройн хоол & Шопинг", text: "Амарсаны дараа Хөх хотод Оройн хоол идээд чөлөөт цаг шопинг.", active: true },{ icon: "shopping-bag", time: "2025.12.05 Өдөр", title: "Чөлөөт өдөр", text: "Чөлөөт өдөр" },{ icon: "building", time: "20:00", title: "Нисэх буудал хүргэх", text: "Хөх хотын онгоцны буудал дээр хүргэж нислэгийн бүрдүүлэлт хийж" },{ icon: "plane-takeoff", time: "23:30", title: "Нислэг", text: "Улаанбаатар хотруу хөөрнө." },{ icon: "home", time: "2025.12.06 01:00", title: "Буух", text: "Улаанбаатар хотод шилжих шөнө бууна." }]
             },
             { 
+                country: "MONGOLIA",
                 city: "Улаанбаатар-Замын-Үүд", 
                 desc: "Малчдад зориулсан аялал", 
                 bg: "UB_downtown.jpg",
-                itinerary: [
-                    { icon: "train", time: "15:30", title: "УБ-Хотын төмөр зам", text: "Хүрэлцэн ирэх, Зураг даруулах"},
-                    { icon: "train", time: "16:40", title: "УБ-Хотын төмөр зам", text: "Вагон хөдлөх", active:true },
-                    { icon: "bed", time: "Шөнө", title: "Ая тухтай аялал", text: "2-р зэрэглэлийн унтлагын вагоноор тухтай зорчино."},
-                    { icon: "map-pin", time: "Өдөр 2", title: "БНХАУ-ын Өвөрмонгол", text: "Туршлага солилцох"},
-                    { icon: "hotel", time: "Өдөр 2", title: "БНХАУ-ын Өвөрмонгол", text: "Han Ting сүлжээ буудал, өглөөний цай оройн хоол орсон", active: true },
-                    { icon: "building", time: "Өдөр 3", title: "Шилийн гол аймгийн Олон Улсын Монгол Эмнэлэг", text: "Энэхүү эмнэлэг дээрээ манай аялагчид шинжилгээндээ хамрагдах юм."},
-                    { icon: "hotel", time: "Өдөр 4", title: "Шилийн гол аймаг", text: "Чөлөөт өдөр, Буудлаасаа ойрхон зайд орших Тахилгат овоо үзнэ.", active:true },
-                    { icon: "map-pin", time: "Өдөр 5", title: "Эрээн хот-Замын-Үүд", text: "14:00 цагаас хөтөчийн заасан газарт цуглан хилээр гарна."},
-                    { icon: "train", time: "18:00", title: "УБ-Хотын чиглэлийн галт", text: "Вагон хөдлөх", active:true },
-                    { icon: "train", time: "Өдөр 6", title: "Улаанбаатар", text: "Өглөөний 09:20 цагт Улаанбаатарт ирж аялал өндөрлөнө.", active: true }
-                ]
+                itinerary: [{ icon: "train", time: "15:30", title: "УБ-Хотын төмөр зам", text: "Хүрэлцэн ирэх, Зураг даруулах"},{ icon: "train", time: "16:40", title: "УБ-Хотын төмөр зам", text: "Вагон хөдлөх", active:true },{ icon: "bed", time: "Шөнө", title: "Ая тухтай аялал", text: "2-р зэрэглэлийн унтлагын вагоноор тухтай зорчино."},{ icon: "map-pin", time: "Өдөр 2", title: "БНХАУ-ын Өвөрмонгол", text: "Туршлага солилцох"},{ icon: "hotel", time: "Өдөр 2", title: "БНХАУ-ын Өвөрмонгол", text: "Han Ting сүлжээ буудал, өглөөний цай оройн хоол орсон", active: true },{ icon: "building", time: "Өдөр 3", title: "Шилийн гол аймгийн Олон Улсын Монгол Эмнэлэг", text: "Энэхүү эмнэлэг дээрээ манай аялагчид шинжилгээндээ хамрагдах юм."},{ icon: "hotel", time: "Өдөр 4", title: "Шилийн гол аймаг", text: "Чөлөөт өдөр, Буудлаасаа ойрхон зайд орших Тахилгат овоо үзнэ.", active:true },{ icon: "map-pin", time: "Өдөр 5", title: "Эрээн хот-Замын-Үүд", text: "14:00 цагаас хөтөчийн заасан газарт цуглан хилээр гарна."},{ icon: "train", time: "18:00", title: "УБ-Хотын чиглэлийн галт", text: "Вагон хөдлөх", active:true },{ icon: "train", time: "Өдөр 6", title: "Улаанбаатар", text: "Өглөөний 09:20 цагт Улаанбаатарт ирж аялал өндөрлөнө.", active: true }]
             },
             { 
+                country: "china",
                 city: "Жининь- Бээжин- Юниверсал- Дэлхийн парк", 
                 desc: "7 шөнө 8 өдөр аяллын хөтөлбөр", 
                 bg: "Universal.png", 
-                itinerary: [
-                    { icon: "log-in", time: "1-Р ӨДӨР 16:00", title: "Улаанбаатар - Замын Үүд", text: "Улаанбаатарт 16:00 цагт галт тэрэгний буудалд цуглана." },
-                    { icon: "train", time: "2-Р ӨДӨР 07:20", title: "Эрээн - Жининь", text: "Өглөө 7:20 цагт Замын Үүдэд очно. 'WATER WORLD' цогцолборт байрлана." },
-                    { icon: "hotel", time: "3-Р ӨДӨР Өглөө", title: "Жининь - Бээжин хот", text: "Өглөөний цайны дараагаар Бээжин хотыг зорино.", active: true },
-                    { icon: "waves", time: "4-Р ӨДӨР Өдөр", title: "Бээжин Аквариум & Дэлхийн парк", text: "Бээжин аквариумд зочилно. Далайн хав, дельфины тоглолт үзнэ.", active: true },
-                    { icon: "ticket", time: "5-Р ӨДӨР Өглөө", title: "Бээжин - Юниверсал Студи", text: "Universal Studio-д очиж цагийг хөгжилтэй өнгөрөөнө.", active: true },
-                    { icon: "milestone", time: "6-Р ӨДӨР Өглөө", title: "Бээжин - Эрээн", text: "Дэлхийн долоон гайхамшигийн нэг Цагаан хэрмээр аялна." },
-                    { icon: "shopping-bag", time: "7-Р ӨДӨР 12:00", title: "Эрээн - Замын-Үүд - Улаанбаатар", text: "Өглөөний цайны дараа Эрээн хотын худалдааны төвөөр орно." },
-                    { icon: "home", time: "8-Р ӨДӨР 09:20", title: "Улаанбаатар", text: "09:20 цагт Улаанбаатар хотод бууна." }
-                ]
+                itinerary: [{ icon: "log-in", time: "1-Р ӨДӨР 16:00", title: "Улаанбаатар - Замын Үүд", text: "Улаанбаатарт 16:00 цагт галт тэрэгний буудалд цуглана." },{ icon: "train", time: "2-Р ӨДӨР 07:20", title: "Эрээн - Жининь", text: "Өглөө 7:20 цагт Замын Үүдэд очно. 'WATER WORLD' цогцолборт байрлана." },{ icon: "hotel", time: "3-Р ӨДӨР Өглөө", title: "Жининь - Бээжин хот", text: "Өглөөний цайны дараагаар Бээжин хотыг зорино.", active: true },{ icon: "waves", time: "4-Р ӨДӨР Өдөр", title: "Бээжин Аквариум & Дэлхийн парк", text: "Бээжин аквариумд зочилно. Далайн хав, дельфины тоглолт үзнэ.", active: true },{ icon: "ticket", time: "5-Р ӨДӨР Өглөө", title: "Бээжин - Юниверсал Студи", text: "Universal Studio-д очиж цагийг хөгжилтэй өнгөрөөнө.", active: true },{ icon: "milestone", time: "6-Р ӨДӨР Өглөө", title: "Бээжин - Эрээн", text: "Дэлхийн долоон гайхамшигийн нэг Цагаан хэрмээр аялана." },{ icon: "shopping-bag", time: "7-Р ӨДӨР 12:00", title: "Эрээн - Замын-Үүд - Улаанбаатар", text: "Өглөөний цайны дараа Эрээн хотын худалдааны төвөөр орно." },{ icon: "home", time: "8-Р ӨДӨР 09:20", title: "Улаанбаатар", text: "09:20 цагт Улаанбаатар хотод бууна." }]
             },
             { 
+                country: "other",
                 city: "Дубай", 
                 desc: "Арабын нэгдсэн Эмират улс", 
                 bg: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "sun", time: "Day 1", title: "Сафари аялал", text: "Элсэн цөлөөр жипээр аялах", active: true },
-                    { icon: "building", time: "Day 2", title: "Бурж Халифа", text: "Дэлхийн хамгийн өндөр цамхаг" }
-                ]
+                itinerary: [{ icon: "sun", time: "Day 1", title: "Сафари аялал", text: "Элсэн цөлөөр жипээр аялах", active: true },{ icon: "building", time: "Day 2", title: "Бурж Халифа", text: "Дэлхийн хамгийн өндөр цамхаг" }]
             },
             { 
+                country: "china",
                 city: "Манжуур хотын аялал", 
                 desc: "5 шөнө 5 өдөр аяллын хөтөлбөр", 
                 bg: "Manjuur.png", 
-                itinerary: [
-                    { icon: "log-in", time: "1-Р ӨДӨР", title: "Улаанбаатар", text: "Сансар худалдааны төв зогсоол дээрээс хөдөлнө." },
-                    { icon: "bus", time: "2-Р ӨДӨР 08:00", title: "Хавиргын Боомт - Манжуур хот", text: "Манжуур хот руу хөдөлж буудалдаа байрлана.", active: true},
-                    { icon: "camera", time: "3-Р ӨДӨР 07:30", title: "Манжуур хотын аялал", text: "Манжуур толгой, Уурхайн музей үзнэ.", active: true },
-                    { icon: "sun", time: "4-Р ӨДӨР 07:30", title: "Манжуур (Чөлөөт өдөр)", text: "07:30-09:00 өглөөний цай. Чөлөөт өдөр.", active: true },
-                    { icon: "home", time: "5-Р ӨДӨР 06:00", title: "Манжуур - Улаанбаатар", text: "Өглөөний цайны дараа хилийн зүг хөдөлнө." }
-                ]
+                itinerary: [{ icon: "log-in", time: "1-Р ӨДӨР", title: "Улаанбаатар", text: "Сансар худалдааны төв зогсоол дээрээс хөдөлнө." },{ icon: "bus", time: "2-Р ӨДӨР 08:00", title: "Хавиргын Боомт - Манжуур хот", text: "Манжуур хот руу хөдөлж буудалдаа байрлана.", active: true},{ icon: "camera", time: "3-Р ӨДӨР 07:30", title: "Манжуур хотын аялал", text: "Манжуур толгой, Уурхайн музей үзнэ.", active: true },{ icon: "sun", time: "4-Р ӨДӨР 07:30", title: "Манжуур (Чөлөөт өдөр)", text: "07:30-09:00 өглөөний цай. Чөлөөт өдөр.", active: true },{ icon: "home", time: "5-Р ӨДӨР 06:00", title: "Манжуур - Улаанбаатар", text: "Өглөөний цайны дараа хилийн зүг хөдөлнө." }]
             },
             { 
+                country: "china",
                 city: "Хөх хот- Гуанжоу- Макоу- Жуха", 
                 desc: "9 шөнө 10 өдрийн аяллын хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "log-in", time: "Өдөр 1 16:40", title: "Улаанбаатар - Замын-Үүд", text: "Улаанбаатараас Эрээн чиглэлд вагоноор хөдөлнө." },
-                    { icon: "plane", time: "Өдөр 2 13:00", title: "Замын-Үүд - Эрээн - Хөх хот - Гуанжоу", text: "Хөх хотоос Гуанжоу хотын зүг шууд нислэг хийнэ." },
-                    { icon: "map", time: "Өдөр 3 00:30", title: "Гуанжоу - Жуха", text: "Жуха хотын алдарт 10 газраар аялна.", active: true },
-                    { icon: "waves", time: "Өдөр 4 Өдөр", title: "Жуха хотын аялал", text: "Дэлхийд 6-д орох Далайн аквариум үзнэ.", active: true },
-                    { icon: "landmark", time: "Өдөр 5 13:00", title: "Жуха - Макоу - Гуанжоу", text: "Гуанжоу хотод очиж зочид буудалдаа амарна.", active: true },
-                    { icon: "camera", time: "Өдөр 6 Өглөө", title: "Гуанжоу аялал", text: "Ази тивдээ хамгийн том амьтны хүрээлэнгээр аялна.", active: true },
-                    { icon: "shopping-bag", time: "Өдөр 7 Өдөр", title: "Гуанжоу хотын худалдааны дэлгүүр", text: "Эне өдөр аялагчид Shopping хийх чөлөөт цаг." },
-                    { icon: "sun", time: "Өдөр 8 Бүтэн өдөр", title: "Гуанжоу (Чөлөөт өдөр)", text: "Аялагчдын чөлөөт өдөр тааваараа амарна.", active: true },
-                    { icon: "building", time: "Өдөр 9 04:00", title: "Гуанжоу - Хөх хот", text: "Хөх хотруу нисэж, Музей үзнэ.", active: true },
-                    { icon: "home", time: "Өдөр 10 08:00", title: "Хөх хот - Эрээн - Улаанбаатар", text: "Эрээн хотод бууж хилийн зүг явна." }
-                ]
+                itinerary: [{ icon: "log-in", time: "Өдөр 1 16:40", title: "Улаанбаатар - Замын-Үүд", text: "Улаанбаатараас Эрээн чиглэлд вагоноор хөдөлнө." },{ icon: "plane", time: "Өдөр 2 13:00", title: "Замын-Үүд - Эрээн - Хөх хот - Гуанжоу", text: "Хөх хотоос Гуанжоу хотын зүг шууд нислэг хийнэ." },{ icon: "map", time: "Өдөр 3 00:30", title: "Гуанжоу - Жуха", text: "Жуха хотын алдарт 10 газраар аялна.", active: true },{ icon: "waves", time: "Өдөр 4 Өдөр", title: "Жуха хотын аялал", text: "Дэлхийд 6-д орох Далайн аквариум үзнэ.", active: true },{ icon: "landmark", time: "Өдөр 5 13:00", title: "Жуха - Макоу - Гуанжоу", text: "Гуанжоу хотод очиж зочид буудалдаа амарна.", active: true },{ icon: "camera", time: "Өдөр 6 Өглөө", title: "Гуанжоу аялал", text: "Ази тивдээ хамгийн том амьтны хүрээлэнгээр аялна.", active: true },{ icon: "shopping-bag", time: "Өдөр 7 Өдөр", title: "Гуанжоу хотын худалдааны дэлгүүр", text: "Эне өдөр аялагчид Shopping хийх чөлөөт цаг." },{ icon: "sun", time: "Өдөр 8 Бүтэн өдөр", title: "Гуанжоу (Чөлөөт өдөр)", text: "Аялагчдын чөлөөт өдөр тааваараа амарна.", active: true },{ icon: "building", time: "Өдөр 9 04:00", title: "Гуанжоу - Хөх хот", text: "Хөх хотруу нисэж, Музей үзнэ.", active: true },{ icon: "home", time: "Өдөр 10 08:00", title: "Хөх хот - Эрээн - Улаанбаатар", text: "Эрээн хотод бууж хилийн зүг явна." }]
             },
             { 
+                country: "china",
                 city: "Хөх хотын бүтэн биеийн шинжилгээтэй аялал ба Жининь хот", 
                 desc: "6 шөнө 7 өдрийн аяллын хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "log-in", time: "ӨДӨР-1 15:30", title: "Улаанбаатар - Замын-Үүд", text: "Уб - Замын-Үүд чиглэлийн вагоноор аялал эхэлнэ." },
-                    { icon: "bus", time: "ӨДӨР-2 07:20", title: "Замын-Үүд - Эрээн - Хөх хот", text: "Хөх хотын зүг хөдөлнө буудалдаа амарна." },
-                    { icon: "hospital", time: "ӨДӨР-3 Өглөө", title: "Эрүүл мэндийн шинжилгээ & Хөх хотын аялал", text: "Шинжилгээний төв рүү явж шинжилгээ өгнө.", active: true },
-                    { icon: "waves", time: "ӨДӨР-4 Өглөө", title: "Хөх хот - Мини Аватар - Жининь хот", text: "Water World усан амралтын цогцолборт байрлана.", active: true },
-                    { icon: "milestone", time: "ӨДӨР-5 Өглөө", title: "Жининь - Эрээн хот", text: "Хүслийн суварга ууланд гарч хотыг харна." },
-                    { icon: "train", time: "ӨДӨР-6 12:00", title: "Эрээн - Замын-Үүд - Улаанбаатар", text: "Улс хоорондын автобусаар Замын-Үүдэд ирнэ." },
-                    { icon: "home", time: "ӨДӨР-7 09:20", title: "Улаанбаатар хотод буух", text: "Улаанбаатар төмөр замын буудалд ирнэ." }
-                ]
+                itinerary: [{ icon: "log-in", time: "ӨДӨР-1 15:30", title: "Улаанбаатар - Замын-Үүд", text: "Уб - Замын-Үүд чиглэлийн вагоноор аялал эхэлнэ." },{ icon: "bus", time: "ӨДӨР-2 07:20", title: "Замын-Үүд - Эрээн - Хөх хот", text: "Хөх хотын зүг хөдөлнө буудалдаа амарна." },{ icon: "hospital", time: "ӨДӨР-3 Өглөө", title: "Эрүүл мэндийн шинжилгээ & Хөх хотын аялал", text: "Шинжилгээний төв рүү явж шинжилгээ өгнө.", active: true },{ icon: "waves", time: "ӨДӨР-4 Өглөө", title: "Хөх хот - Мини Аватар - Жининь хот", text: "Water World усан амралтын цогцолборт байрлана.", active: true },{ icon: "milestone", time: "ӨДӨР-5 Өглөө", title: "Жининь - Эрээн хот", text: "Хүслийн суварга ууланд гарч хотыг харна." },{ icon: "train", time: "ӨДӨР-6 12:00", title: "Эрээн - Замын-Үүд - Улаанбаатар", text: "Улс хоорондын автобусаар Замын-Үүдэд ирнэ." },{ icon: "home", time: "ӨДӨР-7 09:20", title: "Улаанбаатар хотод буух", text: "Улаанбаатар төмөр замын буудалд ирнэ." }]
             },
             { 
+                country: "other",
                 city: "Бали арлын аялал", 
                 desc: "7 шөнө 8 өдрийн аяллын хөтөлбөр", 
                 bg: "Bali.jpg",
-                itinerary: [
-                    { icon: "plane", time: "Өдөр 1 12:25", title: "Улаанбаатар - Бали", text: "Индонезийн Бали арлын чиглэлд ниснэ." },
-                    { icon: "waves", time: "Өдөр 2 Өглөө", title: "Чөлөөт өдөр (Ватербом усан парк)", text: "Ватербом усан паркад цагийг хөгжилтэй өнгөрүүлнэ.", active: true },
-                    { icon: "camera", time: "Өдөр 3 Өглөө", title: "Бали аялал (Тэггаланг & Кинтамани)", text: "Үзэсгэлэнт цагаан будааны тариалангийн талбай үзнэ.", active: true },
-                    { icon: "landmark", time: "Өдөр 4 Өглөө", title: "Бали аялал (Lempuyang сүм)", text: "Lempuyang буюу диваажингийн хаалгаар зочилно.", active: true },
-                    { icon: "ship", time: "Өдөр 5 Өглөө", title: "Бали (Нуса Пенида арал)", text: "Нуса Пенида арал руу хурдны завиар хөдөлнө.", active: true },
-                    { icon: "sun", time: "Өдөр 6 Бүтэн өдөр", title: "Бали (Чөлөөт өдөр)", text: "Сэрүүлэггүй өглөө байх бөгөөд чөлөөт өдөр.", active: true },
-                    { icon: "milestone", time: "Өдөр 7 Өглөө", title: "Бали - Сөүл", text: "Канто Лампо хүрхрээ үзээд нисэх буудал явна.", active: true },
-                    { icon: "home", time: "Өдөр 8 01:20", title: "Сөүл - Улаанбаатар", text: "Улаанбаатар хотын чиглэлд нисэж газардана." }
-                ]
+                itinerary: [{ icon: "plane", time: "Өдөр 1 12:25", title: "Улаанбаатар - Бали", text: "Индонезийн Бали арлын чиглэлд ниснэ." },{ icon: "waves", time: "Өдөр 2 Өглөө", title: "Чөлөөт өдөр (Ватербом усан парк)", text: "Ватербом усан паркад цагийг хөгжилтэй өнгөрүүлнэ.", active: true },{ icon: "camera", time: "Өдөр 3 Өглөө", title: "Бали аялал (Тэггаланг & Кинтамани)", text: "Үзэсгэлэнт цагаан будааны тариалангийн талбай үзнэ.", active: true },{ icon: "landmark", time: "Өдөр 4 Өглөө", title: "Бали аялал (Lempuyang сүм)", text: "Lempuyang буюу диваажингийн хаалгаар зочилно.", active: true },{ icon: "ship", time: "Өдөр 5 Өглөө", title: "Бали (Нуса Пенида арал)", text: "Нуса Пенида арал руу хурдны завиар хөдөлнө.", active: true },{ icon: "sun", time: "Өдөр 6 Бүтэн өдөр", title: "Бали (Чөлөөт өдөр)", text: "Сэрүүлэггүй өглөө байх бөгөөд чөлөөт өдөр.", active: true },{ icon: "milestone", time: "Өдөр 7 Өглөө", title: "Бали - Сөүл", text: "Канто Лампо хүрхрээ үзээд нисэх буудал явна.", active: true },{ icon: "home", time: "Өдөр 8 01:20", title: "Сөүл - Улаанбаатар", text: "Улаанбаатар хотын чиглэлд нисэж газардана." }]
             },
             { 
+                country: "china",
                 city: "Хөх хот, Шанхай хотын газар нислэг хосолсон аялал", 
                 desc: "10 өдөр / 9 шөнө аяллын хөтөлбөр", 
                 bg: "Shanghai.jpg",
-                itinerary: [
-                    { icon: "log-in", time: "ӨДӨР-1 15:30", title: "Улаанбаатар - Замын-Үүд", text: "УБ-Замын-Үүд чиглэлийн вагоноор аялал эхэлнэ." },
-                    { icon: "bus", time: "ӨДӨР-2 07:20", title: "Замын-Үүд - Эрээн - Хөх хот", text: "Хөх хот руу 350 км авто замаар явж хүрнэ." },
-                    { icon: "hospital", time: "ӨДӨР-3 Өглөө", title: "Хөх хот - Шанхай хот", text: "Шанхай хот руу нисэж буудалдаа очиж амарна.", active: true },
-                    { icon: "ticket", time: "ӨДӨР-4 Өглөө", title: "Шанхайн Диснейлэнд", text: "Бүтэн өдрийг Диснейлэнд паркад өнгөрүүлнэ.", active: true },
-                    { icon: "camera", time: "ӨДӨР-5 Өглөө", title: "Шанхай Амьтны хүрээлэн & Пу мөрний аялал", text: "Дорны сувд цамхаг, Бунд гудамжаар аялна.", active: true },
-                    { icon: "waves", time: "ӨДӨР-6 Өглөө", title: "Ю Гарден & Далайн аквариум", text: "Ю Гарден цэцэрлэгт хүрээлэнгээр аялна.", active: true },
-                    { icon: "plane", time: "ӨДӨР-7 12:00", title: "Шанхай - Хөх хот", text: "Нислэгээр Хөх хотод буун зочид буудалдаа амарна." },
-                    { icon: "milestone", time: "ӨДӨР-8 07:00", title: "Хөх хот - Эрээн хот", text: "Эрээн хотын зүг хөдөлж буудалдаа амарна." },
-                    { icon: "train", time: "ӨДӨР-9 12:00", title: "Эрээн - Замын-Үүд - Улаанбаатар", text: "Улс хоорондын автобусаар Замын-Үүдэд ирнэ." },
-                    { icon: "home", time: "ӨДӨР-10 09:20", title: "Улаанбаатар хотод буух", text: "Улаанбаатар төмөр замын буудалд ирснээр өндөрлөнө." }
-                ]
+                itinerary: [{ icon: "log-in", time: "ӨДӨР-1 15:30", title: "Улаанбаатар - Замын-Үүд", text: "УБ-Замын-Үүд чиглэлийн вагоноор аялал эхэлнэ." },{ icon: "bus", time: "ӨДӨР-2 07:20", title: "Замын-Үүд - Эрээн - Хөх хот", text: "Хөх хот руу 350 км авто замаар явж хүрнэ." },{ icon: "hospital", time: "ӨДӨР-3 Өглөө", title: "Хөх хот - Шанхай хот", text: "Шанхай хот руу нисэж буудалдаа очиж амарна.", active: true },{ icon: "ticket", time: "ӨДӨР-4 Өглөө", title: "Шанхайн Диснейлэнд", text: "Бүтэн өдрийг Диснейлэнд паркад өнгөрүүлнэ.", active: true },{ icon: "camera", time: "ӨДӨР-5 Өглөө", title: "Шанхай Амьтны хүрээлэн & Пу мөрний аялал", text: "Дорны сувд цамхаг, Бунд гудамжаар аялна.", active: true },{ icon: "waves", time: "ӨДӨР-6 Өглөө", title: "Ю Гарден & Далайн аквариум", text: "Ю Гарден цэцэрлэгт хүрээленгээр аялна.", active: true },{ icon: "plane", time: "ӨДӨР-7 12:00", title: "Шанхай - Хөх хот", text: "Нислэгээр Хөх хотод буун зочид буудалдаа амарна." },{ icon: "milestone", time: "ӨДӨР-8 07:00", title: "Хөх хот - Эрээн хот", text: "Эрээн хотын зүг хөдөлж буудалдаа амарна." },{ icon: "train", time: "ӨДӨР-9 12:00", title: "Эрээн - Замын-Үүд - Улаанбаатар", text: "Улс хоорондын автобусаар Замын-Үүдэд ирнэ." },{ icon: "home", time: "ӨДӨР-10 09:20", title: "Улаанбаатар хотод буух", text: "Улаанбаатар төмөр замын буудалд ирснээр өндөрлөнө." }]
             },
             { 
+                country: "china",
                 city: "Шанхай хотын 4-н нислэгтэй аялал", 
                 desc: "6 шөнө, 7 өдрийн аяллын хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "plane", time: "ӨДӨР-1 06:30", title: "Улаанбаатар - Хөх хот - Шанхай", text: "Шууд нислэгээр хөөрч Хөх хотод бууна." },
-                    { icon: "sun", time: "ӨДӨР-2 Өглөө", title: "Хөх хот - Шанхай (Чөлөөт өдөр)", text: "Өглөөний цайны дараа чөлөөт өдөр амарна." },
-                    { icon: "ticket", time: "ӨДӨР-3 Өглөө", title: "Шанхайн Диснейлэнд", text: "Бүтэн өдрийг Хятад дахь анхны Диснейлэнд паркад өнгөрүүлнэ." },
-                    { icon: "camera", time: "ӨДӨР-4 Өглөө", title: "Шанхай Амьтны хүрээлэн & Пу мөрний аялал", text: "5 одтой зэрлэг амьтны хүрээлэн үзнэ.", active: true },
-                    { icon: "waves", time: "ӨДӨР-5 Өглөө", title: "Ю Гарден & Далайн аквариум", text: "Хятадын алдарт Ю Гарден цэцэрлэгт хүрээлэн үзнэ.", active: true },
-                    { icon: "plane", time: "ӨДӨР-6 12:00", title: "Шанхай - Хөх хот", text: "Нислэгээр Хөх хотод буун зочид буудалдаа амарна." },
-                    { icon: "home", time: "ӨДӨР-7 07:00", title: "Хөх хот - Улаанбаатар", text: "Чингис хаан олон улсын нисэх буудалд бууна." }
-                ]
+                itinerary: [{ icon: "plane", time: "ӨДӨР-1 06:30", title: "Улаанбаатар - Хөх хот - Шанхай", text: "Шууд нислэгээр хөөрч Хөх хотод бууна." },{ icon: "sun", time: "ӨДӨР-2 Өглөө", title: "Хөх хот - Шанхай (Чөлөөт өдөр)", text: "Өглөөний цайны дараа чөлөөт өдөр амарна." },{ icon: "ticket", time: "ӨДӨР-3 Өглөө", title: "Шанхайн Диснейлэнд", text: "Бүтэн өдрийг Хятад дахь анхны Диснейлэнд паркад өнгөрүүлнэ." },{ icon: "camera", time: "ӨДӨР-4 Өглөө", title: "Шанхай Амьтны хүрээлэн & Пу мөрний аялал", text: "5 одтой зэрлэг амьтны хүрээлэн үзнэ.", active: true },{ icon: "waves", time: "ӨДӨР-5 Өглөө", title: "Ю Гарден & Далайн аквариум", text: "Хятадын алдарт Ю Гарден цэцэрлэгт хүрээлэн үзнэ.", active: true },{ icon: "plane", time: "ӨДӨР-6 12:00", title: "Шанхай - Хөх хот", text: "Нислэгээр Хөх хотод буун зочид буудалдаа амарна." },{ icon: "home", time: "ӨДӨР-7 07:00", title: "Хөх хот - Улаанбаатар", text: "Чингис хаан олон улсын нисэх буудалд бууна." }]
             },
             { 
-                city: "Натранг", 
-                desc: "5 шөнө 6 өдрийн аяллын хөтөлбөр", 
-                bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "plane", time: "ӨДӨР 1 08:00", title: "Улаанбаатар - Натранг", text: "Натранг руу шууд нисэж зочид буудалд хүрэлцэн ирнэ." },
-                    { icon: "waves", time: "ӨДӨР 2 Өглөө", title: "Натранг - Vinwonder park", text: "Далай доторх арал дээр байрлах Vinwonder паркаар аялна.", active: true },
-                    { icon: "camera", time: "ӨДӨР 3 Өглөө", title: "Натранг хотын аялал & Shopping", text: "хотын түүх, соёлын дурсгалт газрууд үзнэ.", active: true },
-                    { icon: "sun", time: "ӨДӨР 4 Бүтэн өдөр", title: "Натранг чөлөөт өдөр", text: "Цагийг өөрийн хүссэнээрээ өнгөрүүлэх чөлөөт өдөр." },
-                    { icon: "ship", time: "ӨДӨР 5 Өглөө", title: "Натранг 3 арлын аялал - Шавар Банн", text: "Mun арал элсэн дээр амарч, тэнгист сэлнэ.", active: true }
-                ]
-            },
-            { 
+                country: "china",
                 city: "Үзэсгэлэнт ДАЛИАН хотын аялал", 
                 desc: "7 шөнө 8 өдрийн аяллын хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "plane", time: "Өдөр 1", title: "Улаанбаатар - Далянь", text: "Далянь хотын онгоцны буудлаас тосож аваад буудалд бууна." },
-                    { icon: "sun", time: "Өдөр 2", title: "Далянь (Чөлөөт өдөр)", text: "Хөтөлбөрт ороогүй газруудаар чөлөөтэй аялах өдөр." },
-                    { icon: "camera", time: "Өдөр 3 10:30", title: "Далянь хотын аялал", text: "Хотын хамгийн өндөр цэг Лянхуа уул дээрээс харна.", active: true },
-                    { icon: "sun", time: "Өдөр 4", title: "Далянь (Чөлөөт өдөр)", text: "Чөлөөт цаг - Далянь хотын бусад газруудаар аялах боломжтой." },
-                    { icon: "ticket", time: "Өдөр 5 10:00", title: "Discovery хаант улс", text: "Discovery Kingdom Theme Park руу явж тоглоно.", active: true },
-                    { icon: "sun", time: "Өдөр 6", title: "Далянь (Чөлөөт өдөр)", text: "Буудалд өглөөний хоол ууна. Чөлөөт аялах өдөр." },
-                    { icon: "building", time: "Өдөр 7 10:00", title: "Байгалийн түүхийн музей", text: "Далянь байгалийн түүхийн музей үзнэ.", active: true },
-                    { icon: "home", time: "Өдөр 8 12:00", title: "Далянь - Улаанбаатар", text: "12:00 цагт өрөөгөө хүлээлгэж өгөөд УБ чиглэлд ниснэ." }
-                ]
+                itinerary: [{ icon: "plane", time: "Өдөр 1", title: "Улаанбаатар - Далянь", text: "Далянь хотын онгоцны буудлаас тосож аваад буудалд бууна." },{ icon: "sun", time: "Өдөр 2", title: "Далянь (Чөлөөт өдөр)", text: "Хөтөлбөрт ороогүй газруудаар чөлөөтэй аялах өдөр." },{ icon: "camera", time: "Өдөр 3 10:30", title: "Далянь хотын аялал", text: "Хотын хамгийн өндөр цэг Лянхуа уул дээрээс харна.", active: true },{ icon: "sun", time: "Өдөр 4", title: "Далянь (Чөлөөт өдөр)", text: "Чөлөөт цаг - Далянь хотын бусад газруудаар аялах боломжтой." },{ icon: "ticket", time: "Өдөр 5 10:00", title: "Discovery хаант улс", text: "Discovery Kingdom Theme Park руу явж тоглоно.", active: true },{ icon: "sun", time: "Өдөр 6", title: "Далянь (Чөлөөт өдөр)", text: "Буудалд өглөөний хоол ууна. Чөлөөт аялах өдөр." },{ icon: "building", time: "Өдөр 7 10:00", title: "Байгалийн түүхийн музей", text: "Далянь байгалийн түүхийн музей үзнэ.", active: true },{ icon: "home", time: "Өдөр 8 12:00", title: "Далянь - Улаанбаатар", text: "12:00 цагт өрөөгөө хүлээлгэж өгөөд УБ чиглэлд ниснэ." }]
             },
             { 
+                country: "china",
                 city: "Жанжиажэ - Аватар уулсын аялал", 
                 desc: "7 шөнө 8 өдрийн аяллын хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "plane", time: "Өдөр 1 15:30", title: "Улаанбаатар - Жанжиажэ", text: "Жанжиажэ хотод ирж, буудалдаа байрлан амарна." },
-                    { icon: "milestone", time: "Өдөр 2 08:00", title: "Grand Canyon Шилэн гүүр", text: "дэлхийн хамгийн өндөр, урт Шилэн гүүрийг үзнэ.", active: true },
-                    { icon: "landmark", time: "Өдөр 3 08:00", title: "Туси музей & Тэнгэрийн хаалга уул", text: "дэлхийн хамгийн урт агаарын дүүжин замаар гарна.", active: true },
-                    { icon: "camera", time: "Өдөр 4 08:00", title: "Жанжиажэ Үндэсний парк (Аватар уул)", text: "'Аватар' киноны зураг авалтыг хийсэн уул үзнэ.", active: true },
-                    { icon: "waves", time: "Өдөр 5 08:00", title: "Happy Water World & Kale Planet", text: "Чангдод байрлах усан парк руу хөдөлнө.", active: true },
-                    { icon: "map", time: "Өдөр 6 08:00", title: "Моронг Миао тосгон - Фуронг жөн", text: "хүрхрээт эртний хот, өвөрмөц Фуронг сууринд зочилно.", active: true },
-                    { icon: "ship", time: "Өдөр 7 08:00", title: "Маоянь голын завин аялал", text: "Маоянь голын байгалийн үзэсгэлэнт газар руу хөдөлнө.", active: true },
-                    { icon: "home", time: "Өдөр 8 12:00", title: "Жанжиажэ - Улаанбаатар", text: "17:00 цагт буудалд цугларч нисэх буудал руу хөдөлнө." }
-                ]
+                itinerary: [{ icon: "plane", time: "Өдөр 1 15:30", title: "Улаанбаатар - Жанжиажэ", text: "Жанжиажэ хотод ірж, буудалдаа байрлан амарна." },{ icon: "milestone", time: "Өдөр 2 08:00", title: "Grand Canyon Шилэн гүүр", text: "дэлхийд хамгийн өндөр, урт Шилэн гүүрийг үзнэ.", active: true },{ icon: "landmark", time: "Өдөр 3 08:00", title: "Туси музей & Тэнгэрийн хаалга уул", text: "дэлхийд хамгийн урт агаарын дүүжин замаар гарна.", active: true },{ icon: "camera", time: "Өдөр 4 08:00", title: "Жанжиажэ Үндэсний парк (Аватар уул)", text: "'Аватар' киноны зураг авалтыг хийсэн уул үзнэ.", active: true },{ icon: "waves", time: "Өдөр 5 08:00", title: "Happy Water World & Kale Planet", text: "Чангдод байрлах усан парк руу хөдөлнө.", active: true },{ icon: "map", time: "Өдөр 6 08:00", title: "Моронг Миао тосгон - Фуронг жөн", text: "хүрхрээт эртний хот, өвөрмөц Фуронг сууринд зочилно.", active: true },{ icon: "ship", time: "Өдөр 7 08:00", title: "Маоянь голын завин аялал", text: "Маоянь голын байгалийн үзэсгэлэнт газар руу хөдөлнө.", active: true },{ icon: "home", time: "Өдөр 8 12:00", title: "Жанжиажэ - Улаанбаатар", text: "17:00 цагт буудалд цугларч нисэх буудал руу хөдөлнө." }]
             },
             { 
+                country: "japan",
                 city: "Япон улс (Шизүока муж - Изүнокуни хот)", 
                 desc: "Сонгинохайрхан дүүргийн төлөөлөгчдийн ажиллагаа, туршлага судлах хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "bus", time: "10.26 16:00", title: "Шизүока - Токио", text: "Изүнокуни хотоос Токио хотын зүг хөдөлнө." },
-                    { icon: "camera", time: "10.27 10:00", title: "Токио хотын аялал", text: "Asakusa Sensoji хуучны гудамж, сүм үзэж, Sky Tour гарна.", active: true },
-                    { icon: "map", time: "10.27 16:00", title: "Эрх чөлөөний хөшөө & Шибүя", text: "Shibuya Street болон алдарт Хачикогийн хөшөө үзнэ.", active: true },
-                    { icon: "milestone", time: "10.28 10:30", title: "Хаконэ - Овакудани уул", text: "Owakudani уул руу дүүжин тээврээр гарна.", active: true },
-                    { icon: "shopping-bag", time: "10.28 13:00", title: "Gotemba Outlet шопинг", text: "Gotenba Outlet худалдааны төвөөр орж шопинг хийнэ." },
-                    { icon: "home", time: "10.29 09:00", title: "Токио - Улаанбаатар буцах", text: "09:00 цагт зочид буудлаа хүлээлгэн өгч нисэх буудал руу хөдөлнө." }
-                ]
+                itinerary: [{ icon: "bus", time: "10.26 16:00", title: "Шизүока - Токио", text: "Изүнокуни хотоос Токио хотын зүг хөдөлнө." },{ icon: "camera", time: "10.27 10:00", title: "Токио хотын аялал", text: "Asakusa Sensoji хуучны гудамж, сүм үзэж, Sky Tour гарна.", active: true },{ icon: "map", time: "10.27 16:00", title: "Эрх чөлөөний хөшөө & Шибүя", text: "Shibuya Street болон алдарт Хачикогийн хөшөө үзнэ.", active: true },{ icon: "milestone", time: "10.28 10:30", title: "Хаконэ - Овакудани уул", text: "Owakudani уул руу дүүжин тээврээр гарна.", active: true },{ icon: "shopping-bag", time: "10.28 13:00", title: "Gotemba Outlet шопинг", text: "Gotenba Outlet худалдааны төвөөр орж шопинг хийнэ." },{ icon: "home", time: "10.29 09:00", title: "Токио - Улаанбаатар буцах", text: "09:00 цагт зочид буудлаа хүлээлгэн өгч нисэх буудал руу хөдөлнө." }]
             },
             { 
+                country: "japan",
                 city: "Япон улс (Тохоку-Сендай-Токио)", 
                 desc: "Албан айлчлал, туршлага судлах, аялал хамтарсан хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "plane", time: "Өдөр 1 07:45", title: "Улаанбаатар - Нарита - Сендай", text: "Нарита нисэх буудалд бууна. Наритагаас Сендай руу явна." },
-                    { icon: "camera", time: "Өдөр 2 Өглөө", title: "Мияги аялал", text: "Asakusa Sensoji хуучны гудамж, сүм үзэж, Sky Tour гарна.", active: true },
-                    { icon: "ship", time: "Өдөр 3 Өглөө", title: "Мацүшима арал & Mitsui Outlet", text: "алдарт Мацүшима арал руу усан онгоцоор аялна.", active: true },
-                    { icon: "map", time: "Өдөр 4 Өглөө", title: "Michinoku үндэсний парк - Токио", text: "Michinoku үндэсний цэцэрлэгт хүрээлэнгээр аялна." },
-                    { icon: "ticket", time: "ӨДӨР 5 Өглөө", title: "Токио хотын аялал (TeamLab)", text: "TeamLab энтертайнтмент дижитал арт паркаар зочилно.", active: true },
-                    { icon: "home", time: "Өдөр 6 15:30", title: "Токио - Улаанбаатар буцах", text: "15:30 цагт Токио хотоос хөөрч Улаанбаатар луу буцна." }
-                ]
+                itinerary: [{ icon: "plane", time: "Өдөр 1 07:45", title: "Улаанбаатар - Нарита - Сендай", text: "Нарита нисэх буудалд бууна. Наритагаас Сендай руу явна." },{ icon: "camera", time: "Өдөр 2 Өглөө", title: "Мияги аялал", text: "Asakusa Sensoji хуучны гудамж, сүм үзэж, үдээс хойш Sky Tour гарна.", active: true },{ icon: "ship", time: "Өдөр 3 Өглөө", title: "Мацүшима арал & Mitsui Outlet", text: "алдарт Мацүшима арал руу усан онгоцоор аялна.", active: true },{ icon: "map", time: "Өдөр 4 Өглөө", title: "Michinoku үндэсний парк - Токио", text: "Michinoku үндэсний цэцэрлэгт хүрээлэнгээр аялна." },{ icon: "ticket", time: "ӨДӨР 5 Өглөө", title: "Токио хотын аялал (TeamLab)", text: "TeamLab энтертайнтмент дижитал арт паркаар зочилно.", active: true },{ icon: "home", time: "Өдөр 6 15:30", title: "Токио - Улаанбаатар буцах", text: "15:30 цагт Токио хотоос хөөрч Улаанбаатар луу буцна." }]
             },
             { 
-                city: "Анталья - Памуккале - Истанбул", 
-                desc: "7 шөнө 8 өдрийн зуны аяллын хөтөлбөр", 
-                bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "plane", time: "Өдөр 1", title: "Улаанбаатар - Истанбул - Анталья", text: "Истанбулаас дамжин Анталья хот руу ниснэ." },
-                    { icon: "camera", time: "Өдөр 2 Өглөө", title: "Анталья хотын аялал", text: "хотын хамгийн үзэсгэлэнтэй хэсэг Хуучин хотоор аялна.", active: true },
-                    { icon: "sun", time: "Өдөр 3 Бүтэн өдөр", title: "Анталья чөлөөт өдөр", text: "Land of Legends усан паркийн аялалд хамрагдах боломжтой.", active: true },
-                    { icon: "bus", time: "Өдөр 4 Өглөө", title: "Анталья - Памуккале", text: "Антальягаас Памуккале руу хөдөлнө." },
-                    { icon: "milestone", time: "Өдөр 5 Үүр", title: "Памуккале - Истанбул", text: "Цасан цагаан хөвөн уул Памуккале үзнэ.", active: true },
-                    { icon: "landmark", time: "Өдөр 6 Өглөө", title: "Истанбул хотын аялал", text: "Истанбул хотын түүхэн аялал хийнэ. Босфорын хоолойгоор аялна.", active: true },
-                    { icon: "shopping-bag", time: "Өдөр 7 Бүтэн өдөр", title: "Истанбул чөлөөт өдөр", text: "Бүтэн өдөр чөлөөт цаг. Шопинг хийх боломжтой." },
-                    { icon: "home", time: "Өдөр 8 Өглөө", title: "Истанбул - Улаанбаатар буцах", text: "Истанбул хотын олон улсын нисэх онгоцны буудал руу хөдөлнө." }
-                ]
-            },
-            { 
+                country: "japan",
                 city: "Япон улс (Изүнокуни - Токио)", 
                 desc: "Сонгинохайрхан дүүргийн төлөөлөгчдийн албан айлчлал, туршлага судлах хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "bus", time: "10.26 16:00", title: "Изүнокуни - Токио", text: "16:00 цагт Шизүока мужийн Изүнокуни хотоос Токио хотын зүг хөдөлнө." },
-                    { icon: "camera", time: "10.27 10:00", title: "Токио хотын аялал", text: "Asakusa Sensoji хуучны гудамж, сүм болон Sky Tree цамхаг үзнэ.", active: true },
-                    { icon: "shopping-bag", time: "10.27 15:00", title: "Шопинг & Шибүя аялал", text: "Shibuya Street болон Хачикогийн хөшөө үзнэ.", active: true },
-                    { icon: "waves", time: "10.28 Өглөө", title: "Эношима арал & Иокохама Outlet", text: "Enoshima Island далайн эргийн аялалд гарна.", active: true },
-                    { icon: "home", time: "10.29 11:00", title: "Токио - Улаанбаатар буцах", text: "Нарита нисэх буудал руу хөдөлж аялал өндөрлөнө." }
-                ]
+                itinerary: [{ icon: "bus", time: "10.26 16:00", title: "Изүнокуни - Токио", text: "16:00 цагт Шизүока мужийн Изүнокуни хотоос Токио хотын зүг хөдөлнө." },{ icon: "camera", time: "10.27 10:00", title: "Токио хотын аялал", text: "Asakusa Sensoji хуучны гудамж, сүм болон Sky Tree цамхаг үзнэ.", active: true },{ icon: "shopping-bag", time: "10.27 15:00", title: "Шопинг & Шибүя аялал", text: "Shibuya Street болон Хачикогийн хөшөө үзнэ.", active: true },{ icon: "waves", time: "10.28 Өглөө", title: "Эношима арал & Иокохама Outlet", text: "Enoshima Island далайн эргийн аялалд гарна.", active: true },{ icon: "home", time: "10.29 11:00", title: "Токио - Улаанбаатар буцах", text: "Нарита нисэх буудал руу хөдөлж аялал өндөрлөнө." }]
             },
             { 
+                country: "japan",
                 city: "Япон улс (Изүнокуни - Токио) - Хувилбар 2", 
                 desc: "Сонгинохайрхан дүүргийн төлөөлөгчдийн албан айлчлал, туршлага судлах хөтөлбөр", 
                 bg: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800",
-                itinerary: [
-                    { icon: "bus", time: "10.26 16:00", title: "Изүнокуни - Токио", text: "16:00 цагт Шизүока мужийн Изүнокуни хотоос Токио хотын зүг хөдөлнө." },
-                    { icon: "camera", time: "10.27 10:00", title: "Токио хотын аялал", text: "Asakusa Sensoji хуучны гудамж, сүм болон Sky Tree цамхаг үзнэ.", active: true },
-                    { icon: "shopping-bag", time: "10.27 15:00", title: "Шопинг & Шибүя аялал", text: "Shibuya Street болон Хачикогийн хөшөө үзнэ.", active: true },
-                    { icon: "waves", time: "10.28 Өглөө", title: "Эношима арал & Иокохама Outlet", text: "Enoshima Island далайн эргийн аялалд гарна.", active: true },
-                    { icon: "home", time: "10.29 11:00", title: "Токио - Улаанбаатар буцах", text: "Нарита нисэх буудал руу хөдөлж нислэгээр хөөрнө." }
-                ]
+                itinerary: [{ icon: "bus", time: "10.26 16:00", title: "Изүнокуни - Токио", text: "16:00 цагт Шизүока мужийн Изүнокуни хотоос Токио хотын зүг хөдөлнө." },{ icon: "camera", time: "10.27 10:00", title: "Токио хотын аялал", text: "Asakusa Sensoji хуучны гудамж, сүм болон Sky Tree цамхаг үзнэ.", active: true },{ icon: "shopping-bag", time: "10.27 15:00", title: "Шопинг & Шибүя аялал", text: "Shibuya Street болон Хачикогийн хөшөө үзнэ.", active: true },{ icon: "waves", time: "10.28 Өглөө", title: "Эношима арал & Иокохама Outlet", text: "Enoshima Island далайн эргийн аялалд гарна.", active: true },{ icon: "home", time: "10.29 11:00", title: "Токио - Улаанбаатар буцах", text: "Нарита нисэх буудал руу хөдөлж нислэгээр хөөрнө." }]
             }
         ];
 
-        document.addEventListener('DOMContentLoaded', () => {
+        function renderDestinations(category) {
             const wrapper = document.getElementById('swiper-wrapper');
-            const fragment = document.createDocumentFragment();
+            wrapper.innerHTML = ''; 
 
-            destinations.forEach(dest => {
+            const filteredData = destinations.filter(dest => {
+                if (category === 'all') return true;
+                return dest.country === category;
+            });
+
+            if (filteredData.length === 0) {
+                wrapper.innerHTML = `<div style="text-align:center; width:100%; padding-top:50px; color:var(--text-muted);">Аялал олдсонгүй.</div>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            filteredData.forEach(dest => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
                 slide.innerHTML = `
                     <div class="card" style="background-image: url('${dest.bg}')">
                         <div class="card-content">
                             <h2>${dest.city}</h2>
-                            <p>${dest.desc}</p>
+                            <p>${dest.desc || ''}</p>
                             <button class="btn-view" onclick="openSheet('${dest.city.replace(/'/g, "\\'")}')">Маршрут харах</button>
                         </div>
                     </div>
@@ -454,13 +317,30 @@
             });
             wrapper.appendChild(fragment);
 
-            new Swiper(".mySwiper", {
+            // Destroy old Swiper instance if it exists to clean layout tracking
+            if (mainSwiperInstance) {
+                mainSwiperInstance.destroy(true, true);
+            }
+
+            // Init freshly built dynamic slide list
+            mainSwiperInstance = new Swiper(".mySwiper", {
                 effect: "coverflow",
                 centeredSlides: true,
                 slidesPerView: "auto",
                 coverflowEffect: { rotate: 5, stretch: 0, depth: 100, modifier: 2, slideShadows: false },
             });
+
             lucide.createIcons();
+        }
+
+        function switchCategory(category, element) {
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            renderDestinations(category);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDestinations('all'); 
         });
 
         function openSheet(cityName) {
@@ -469,7 +349,7 @@
             const itineraryContainer = document.getElementById('itinerary-container');
             
             document.getElementById('sheet-title').innerText = dest.city;
-            document.getElementById('sheet-desc').innerText = dest.desc;
+            document.getElementById('sheet-desc').innerText = dest.desc || '';
             mediaBox.innerHTML = `<div class="media-container"><img src="${dest.bg}"></div>`;
             
             itineraryContainer.innerHTML = ''; 
@@ -482,7 +362,7 @@
                 
                 stepElement.innerHTML = `
                     <div class="step-icon ${step.active ? 'active' : ''}">
-                        <i data-lucide="${step.icon}"></i>
+                        <i data-lucide="${step.icon.toLowerCase()}"></i>
                     </div>
                     <div class="step-details">
                         <span class="step-time">${step.time}</span>
@@ -494,13 +374,10 @@
             });
             
             itineraryContainer.appendChild(fragment);
-
             document.getElementById('sheet').classList.add('open');
             document.getElementById('overlay').style.display = 'block';
             
-            lucide.createIcons({
-                node: itineraryContainer
-            });
+            lucide.createIcons({ node: itineraryContainer });
         }
 
         function closeSheet() {
