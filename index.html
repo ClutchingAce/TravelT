@@ -349,7 +349,15 @@
             filteredData.forEach(dest => {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
-                const computedBadge = `Бүх сард явдаг аялал, хүний тоо дүүрсэн тохиолдолд.`;
+                
+                // Энд баж (badge) солих нөхцөлт логикийг оруулж байна
+                let computedBadge = `Бүх сард гардаг аялал, хүний тоо дүүргэж явдаг.`;
+                
+                if (dest.city.includes("Жининь- Бээжин- Юниверсал")) {
+                    computedBadge = `Долоо хоног бүрийн 4 дэх өдөр гарна`;
+                } else if (dest.city.includes("Хөх хотын бүтэн биеийн шинжилгээтэй аялал")) {
+                    computedBadge = `Долоо хоног бүрийн 3 дахь өдөр гарна`;
+                }
 
                 slide.innerHTML = `
                     <div class="card" style="background-image: url('${dest.bg}')">
@@ -375,20 +383,6 @@
             });
             lucide.createIcons();
         }
-
-        function setFilter(type, value, element) {
-            element.parentElement.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
-            element.classList.add('active');
-
-            if (type === 'country') activeCountryFilter = value;
-            if (type === 'transit') activeTransitFilter = value;
-
-            renderDestinations();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderDestinations(); 
-        });
 
         function openSheet(cityName) {
             const dest = destinations.find(d => d.city === cityName);
