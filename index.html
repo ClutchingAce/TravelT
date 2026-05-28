@@ -383,6 +383,20 @@
             });
             lucide.createIcons();
         }
+        
+        function setFilter(type, value, element) {
+            element.parentElement.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+
+            if (type === 'country') activeCountryFilter = value;
+            if (type === 'transit') activeTransitFilter = value;
+
+            renderDestinations();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDestinations(); 
+        });
 
         function openSheet(cityName) {
             const dest = destinations.find(d => d.city === cityName);
